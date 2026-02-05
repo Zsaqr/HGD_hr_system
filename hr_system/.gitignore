@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.dist/
+build/
+
+# Virtual env
+.venv/
+venv/
+
+# Env & secrets
+.env
+.env.*
+
+# DB local files
+*.db
+*.sqlite
+pgdata*/
+postgres-data*/
+*.log
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node (if any)
+node_modules/
