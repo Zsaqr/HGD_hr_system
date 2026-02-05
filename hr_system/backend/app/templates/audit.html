@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex flex-col gap-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">Audit Log</h1>
+    <span class="badge">Latest 50</span>
+  </div>
+
+  <div class="card p-4 overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Time</th>
+          <th>Action</th>
+          <th>Entity</th>
+          <th>Entity ID</th>
+          <th>Actor</th>
+          <th>Meta</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in items %}
+          <tr>
+            <td>{{ x.id }}</td>
+            <td>{{ x.created_at }}</td>
+            <td>{{ x.action }}</td>
+            <td>{{ x.entity or "-" }}</td>
+            <td>{{ x.entity_id or "-" }}</td>
+            <td>{{ x.actor_user_id or "-" }}</td>
+            <td class="max-w-[420px] break-words">{{ x.meta or "-" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

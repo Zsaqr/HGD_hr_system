@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex flex-col gap-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">RBAC Manager</h1>
+    <span class="badge">Admin</span>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="card p-4">
+      <div class="font-semibold mb-3">Assign Role to User</div>
+
+      <form method="post" action="/rbac/user/add-role" class="flex gap-2 flex-wrap mb-3">
+        <select name="user_id" required>
+          {% for u in users %}
+            <option value="{{ u.id }}">{{ u.username }} (ID: {{ u.id }})</option>
+          {% endfor %}
+        </select>
+
+        <select name="role_id" required>
+          {% for r in roles %}
+            <option value="{{ r.id }}">{{ r.name }}</option>
+          {% endfor %}
+        </select>
+
+        <button class="btn" type="submit">Add</button>
+      </form>
+
+      <div class="font-semibold mb-2">Users → Roles</div>
+      <div class="overflow-x-auto">
+        <table class="table w-full">
+          <thead>
+            <tr><th>User</th><th>Roles</th><th>Remove</th></tr>
+          </thead>
+          <tbody>
+            {% for u in users %}
+              <tr>
+                <td>{{ u.username }} ({{ u.id }})</td>
+                <td>
+                  {% set rset = user_roles_map.get(u.id, []) %}
+                  {% if rset %}
+                    {% for r in roles %}
+                      {% if r.id in rset %}
+                        <span class="badge">{{ r.name }}</span>
+                      {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td>
+                  <form method="post" action="/rbac/user/remove-role" class="flex gap-2 flex-wrap">
+                    <input type="hidden" name="user_id" value="{{ u.id }}">
+                    <select name="role_id" required>
+                      {% for r in roles %}
+                        {% if r.id in user_roles_map.get(u.id, []) %}
+                          <option value="{{ r.id }}">{{ r.name }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                    <button class="btn" type="submit">Remove</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card p-4">
+      <div class="font-semibold mb-3">Assign Permission to Role</div>
+
+      <form method="post" action="/rbac/role/add-perm" class="flex gap-2 flex-wrap mb-3">
+        <select name="role_id" required>
+          {% for r in roles %}
+            <option value="{{ r.id }}">{{ r.name }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="permission_id" required>
+          {% for p in perms %}
+            <option value="{{ p.id }}">{{ p.code }}</option>
+          {% endfor %}
+        </select>
+
+        <button class="btn" type="submit">Add</button>
+      </form>
+
+      <div class="font-semibold mb-2">Roles → Permissions</div>
+      <div class="overflow-x-auto">
+        <table class="table w-full">
+          <thead>
+            <tr><th>Role</th><th>Permissions</th><th>Remove</th></tr>
+          </thead>
+          <tbody>
+            {% for r in roles %}
+              <tr>
+                <td>{{ r.name }}</td>
+                <td>
+                  {% set pset = role_perms_map.get(r.id, []) %}
+                  {% if pset %}
+                    {% for p in perms %}
+                      {% if p.id in pset %}
+                        <span class="badge">{{ p.code }}</span>
+                      {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td>
+                  <form method="post" action="/rbac/role/remove-perm" class="flex gap-2 flex-wrap">
+                    <input type="hidden" name="role_id" value="{{ r.id }}">
+                    <select name="permission_id" required>
+                      {% for p in perms %}
+                        {% if p.id in role_perms_map.get(r.id, []) %}
+                          <option value="{{ p.id }}">{{ p.code }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                    <button class="btn" type="submit">Remove</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="text-2xl font-bold mb-4">New Employee</h1>
+
+  <form method="post" class="space-y-4 max-w-2xl">
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm mb-1 opacity-80">Full Name</label>
+        <input class="input" name="full_name" placeholder="e.g. Ziad Muhammed" required />
+      </div>
+
+      <div>
+        <label class="block text-sm mb-1 opacity-80">Email</label>
+        <input class="input" name="email" placeholder="name@company.com" required />
+      </div>
+
+      <div>
+        <label class="block text-sm mb-1 opacity-80">Job Title</label>
+        <input class="input" name="job_title" placeholder="e.g. HR Specialist" />
+      </div>
+
+      <div>
+        <label class="block text-sm mb-1 opacity-80">Hire Date</label>
+        <input class="input" type="date" name="hire_date" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="block text-sm mb-1 opacity-80">Department</label>
+        <select class="input" name="department_id">
+          <option value="">-- None --</option>
+          {% for d in deps %}
+            <option value="{{ d.id }}">{{ d.name }}</option>
+          {% endfor %}
+        </select>
+        <div class="text-xs opacity-70 mt-1">لو القائمة فاضية، اعمل Departments الأول.</div>
+      </div>
+    </div>
+
+    <div class="flex gap-2">
+      <button class="btn" type="submit">Create</button>
+      <a class="btn ghost" href="/employees">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

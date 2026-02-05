@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="min-height: calc(100vh - 220px); display:flex; align-items:center; justify-content:center;">
+  <div class="card" style="width:min(520px, 100%); padding:22px;">
+    <h1 style="margin-bottom:6px;">تسجيل الدخول</h1>
+    <p style="margin-bottom:14px;">ادخل حساب الادمن الافتراضي</p>
+
+    {% if request.query_params.get("error") %}
+      <div class="card" style="padding:12px; margin: 0 0 12px 0; border-color: rgba(255,80,120,.35);">
+        <b style="color: rgba(255,160,180,.95);">خطأ:</b>
+        <span style="opacity:.9;">{{ request.query_params.get("error") }}</span>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/login" style="display:grid; gap:12px;">
+      <div>
+        <label style="display:block; margin-bottom:6px; color: var(--muted);">Username</label>
+        <input class="input" type="text" name="username" autocomplete="username" required />
+      </div>
+
+      <div>
+        <label style="display:block; margin-bottom:6px; color: var(--muted);">Password</label>
+        <input class="input" type="password" name="password" autocomplete="current-password" required />
+      </div>
+
+      <button class="btn btn-primary" type="submit" style="width:100%;">Login</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

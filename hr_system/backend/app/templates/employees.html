@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">Employees</h1>
+    <a class="btn" href="/employees/new">+ New Employee</a>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Job Title</th>
+          <th>Department</th>
+          <th>Hire Date</th>
+          <th class="w-32">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in items %}
+        <tr>
+          <td>{{ e.id }}</td>
+          <td>{{ e.full_name }}</td>
+          <td>{{ e.email }}</td>
+          <td>{{ e.job_title }}</td>
+          <td>{{ e.department.name if e.department else "-" }}</td>
+          <td>{{ e.hire_date if e.hire_date else "-" }}</td>
+          <td>
+            <form method="post" action="/employees/{{ e.id }}/delete">
+              <button class="btn danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+        {% if not items %}
+        <tr><td colspan="7" class="opacity-70">No employees yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

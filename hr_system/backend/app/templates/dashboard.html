@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-bold">Dashboard</h1>
+      <span class="badge">MVP</span>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="card p-4">
+        <div class="text-lg font-semibold mb-2">Employees</div>
+        <p class="opacity-80 text-sm mb-3">إدارة الموظفين: إضافة / حذف / تنظيم.</p>
+        <a class="btn" href="/employees">Open Employees</a>
+      </div>
+
+      <div class="card p-4">
+        <div class="text-lg font-semibold mb-2">Departments</div>
+        <p class="opacity-80 text-sm mb-3">الأقسام: إنشاء أقسام وربطها بالموظفين.</p>
+        <a class="btn" href="/departments">Open Departments</a>
+      </div>
+
+      <div class="card p-4">
+        <div class="text-lg font-semibold mb-2">Attendance</div>
+        <p class="opacity-80 text-sm mb-3">الحضور والانصراف: Check-in / Check-out + سجل.</p>
+        <a class="btn" href="/attendance">Open Attendance</a>
+      </div>
+
+      <div class="card p-4">
+        <div class="text-lg font-semibold mb-2">Leave Requests</div>
+        <p class="opacity-80 text-sm mb-3">طلبات الإجازات: إنشاء + موافقة/رفض (للأدمن).</p>
+        <a class="btn" href="/leaves">Open Leaves</a>
+      </div>
+
+      <div class="card p-4">
+        <div class="text-lg font-semibold mb-2">Payroll</div>
+        <p class="opacity-80 text-sm mb-3">المرتبات: base salary + allowances/deductions + payroll run.</p>
+        <a class="btn" href="/payroll">Open Payroll</a>
+      </div>
+
+      <!-- ✅ NEW -->
+      <div class="card p-4">
+        <div class="text-lg font-semibold mb-2">Audit & Reports</div>
+        <p class="opacity-80 text-sm mb-3">سجل الأحداث + تقارير مختصرة.</p>
+        <a class="btn" href="/reports/audit">Open Audit Log</a>
+      </div>
+    </div>
+
+    <div class="card p-4">
+      <div class="text-lg font-semibold mb-2">Next Modules</div>
+      <ul class="list-disc pr-5 text-sm opacity-85 space-y-1">
+        <li>Attendance (حضور وانصراف)</li>
+        <li>Leave Requests (إجازات وموافقات)</li>
+        <li>Payroll (مرتبات + deductions/allowances)</li>
+        <li>RBAC (Roles & Permissions)</li>
+        <li>Audit Log + Reports</li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

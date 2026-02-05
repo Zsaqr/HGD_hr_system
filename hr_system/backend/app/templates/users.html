@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col gap-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">USERS</h1>
+    <span class="badge">MVP</span>
+  </div>
+
+  {% if request.query_params.get('error') %}
+    <div class="card" style="padding:12px; margin: 12px 0;">
+      <b>Error:</b> {{ request.query_params.get('error') }}
+    </div>
+  {% endif %}
+
+  {% if request.query_params.get('success') %}
+    <div class="card" style="padding:12px; margin: 12px 0;">
+      <b>Success</b>
+    </div>
+  {% endif %}
+
+  <div class="card" style="padding:16px; margin-top:16px; max-width:520px;">
+    <h3 style="margin:0 0 10px 0;">Create User</h3>
+    <form method="post" action="/users/new" style="display:grid; gap:10px;">
+      <div style="display:grid; gap:6px;">
+        <label>Username</label>
+        <input name="username" required />
+      </div>
+
+      <div style="display:grid; gap:6px;">
+        <label>Password</label>
+        <input name="password" type="password" required />
+      </div>
+
+      <label style="display:flex; gap:8px; align-items:center; opacity:.9;">
+        <input type="checkbox" name="is_admin" value="1" />
+        Admin
+      </label>
+
+      <div>
+        <button class="btn" type="submit">Create</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" style="padding:16px; margin-top:16px;">
+    <h3 style="margin:0 0 10px 0;">Existing Users</h3>
+
+    {% if not users %}
+      <div style="opacity:.8;">No users.</div>
+    {% else %}
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="text-align:left; opacity:.85;">
+            <th style="padding:8px;">ID</th>
+            <th style="padding:8px;">Username</th>
+            <th style="padding:8px;">Admin</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+            <tr style="border-top: 1px solid rgba(255,255,255,.08);">
+              <td style="padding:8px;">{{ u.id }}</td>
+              <td style="padding:8px;">{{ u.username }}</td>
+              <td style="padding:8px;">{{ "Yes" if u.is_admin else "No" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

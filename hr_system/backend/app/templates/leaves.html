@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-bold">Leaves</h1>
+      <span class="badge">MVP</span>
+    </div>
+
+    <form method="get" action="/leaves" style="display:flex; gap:8px; align-items:center;">
+      <label style="opacity:.85;">Employee</label>
+      <select name="employee_id">
+        {% for e in employees %}
+          <option value="{{ e.id }}" {% if employee_id == e.id %}selected{% endif %}>
+            {{ e.full_name }}
+          </option>
+        {% endfor %}
+      </select>
+      <button class="btn" type="submit">Load</button>
+    </form>
+  </div>
+
+  {% if request.query_params.get('error') %}
+    <div class="card" style="padding:12px; margin: 12px 0;">
+      <b>Error:</b> {{ request.query_params.get('error') }}
+    </div>
+  {% endif %}
+
+  {% if request.query_params.get('success') %}
+    <div class="card" style="padding:12px; margin: 12px 0;">
+      <b>Success</b>
+    </div>
+  {% endif %}
+
+  <div class="card" style="padding:16px; margin-top:16px;">
+    <h3 style="margin:0 0 10px 0;">New Leave Request</h3>
+
+    <form method="post" action="/leaves/new" style="display:grid; gap:10px; max-width:520px;">
+      <input type="hidden" name="employee_id" value="{{ employee_id }}"/>
+
+      <div style="display:grid; gap:6px;">
+        <label>From</label>
+        <input type="date" name="from_date" required />
+      </div>
+
+      <div style="display:grid; gap:6px;">
+        <label>To</label>
+        <input type="date" name="to_date" required />
+      </div>
+
+      <div style="display:grid; gap:6px;">
+        <label>Type</label>
+        <select name="leave_type">
+          <option value="annual">Annual</option>
+          <option value="sick">Sick</option>
+          <option value="unpaid">Unpaid</option>
+        </select>
+      </div>
+
+      <div style="display:grid; gap:6px;">
+        <label>Reason</label>
+        <input type="text" name="reason" placeholder="Optional" />
+      </div>
+
+      <div>
+        <button class="btn" type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" style="padding:16px; margin-top:16px;">
+    <h3 style="margin:0 0 10px 0;">Requests</h3>
+
+    {% if not items %}
+      <div style="opacity:.8;">No leave requests.</div>
+    {% else %}
+      <table style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr style="text-align:left; opacity:.85;">
+            <th style="padding:8px;">ID</th>
+            <th style="padding:8px;">From</th>
+            <th style="padding:8px;">To</th>
+            <th style="padding:8px;">Type</th>
+            <th style="padding:8px;">Status</th>
+            <th style="padding:8px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lr in items %}
+            <tr style="border-top: 1px solid rgba(255,255,255,.08);">
+              <td style="padding:8px;">{{ lr.id }}</td>
+              <td style="padding:8px;">{{ lr.from_date }}</td>
+              <td style="padding:8px;">{{ lr.to_date }}</td>
+              <td style="padding:8px;">{{ lr.leave_type }}</td>
+              <td style="padding:8px;">{{ lr.status }}</td>
+              <td style="padding:8px;">
+                {% if can_approve and lr.status == "pending" %}
+                  <form method="post" action="/leaves/{{ lr.id }}/approve" style="display:inline;">
+                    <button class="btn" type="submit">Approve</button>
+                  </form>
+                  <form method="post" action="/leaves/{{ lr.id }}/reject" style="display:inline; margin-left:6px;">
+                    <button class="btn" type="submit">Reject</button>
+                  </form>
+                {% else %}
+                  <span style="opacity:.7;">-</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

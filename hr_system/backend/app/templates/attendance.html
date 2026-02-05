@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex flex-col gap-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">ATTENDANCE</h1>
+    <span class="badge">MVP</span>
+  </div>
+
+  {% if request.query_params.get("error") == "open_exists" %}
+    <div class="alert alert-warning">فيه Check-in مفتوح بالفعل للموظف ده.</div>
+  {% endif %}
+  {% if request.query_params.get("error") == "no_open" %}
+    <div class="alert alert-warning">مفيش Check-in مفتوح عشان تعمله Check-out.</div>
+  {% endif %}
+
+  <div class="card">
+    <div class="card-body">
+
+      <!-- ✅ Employee selector -->
+      <form method="get" action="/attendance/">
+        <label><b>Select employee:</b></label>
+        <select name="employee_id">
+          {% for e in employees %}
+            <option value="{{ e.id }}" {% if employee_id == e.id %}selected{% endif %}>
+              {{ e.full_name }} (ID: {{ e.id }})
+            </option>
+          {% endfor %}
+        </select>
+        <button class="btn" type="submit">Go</button>
+      </form>
+
+      <hr />
+
+      {% if employee_id %}
+        <p><b>Employee ID:</b> {{ employee_id }}</p>
+
+        {% if open_attendance %}
+          <p><b>Status:</b> OPEN since {{ open_attendance.check_in }}</p>
+
+          <form method="post" action="/attendance/check-out">
+            <input type="hidden" name="employee_id" value="{{ employee_id }}">
+            <button class="btn btn-danger" type="submit">Check-out</button>
+          </form>
+        {% else %}
+          <p><b>Status:</b> No open attendance</p>
+
+          <form method="post" action="/attendance/check-in">
+            <input type="hidden" name="employee_id" value="{{ employee_id }}">
+            <button class="btn btn-success" type="submit">Check-in</button>
+          </form>
+        {% endif %}
+      {% else %}
+        <p class="opacity-80">مفيش موظفين لسه. أضف موظف الأول.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <h3 style="margin-top:16px;">History</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Check-in</th>
+        <th>Check-out</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in history %}
+      <tr>
+        <td>{{ a.id }}</td>
+        <td>{{ a.check_in }}</td>
+        <td>{{ a.check_out if a.check_out else "-" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
